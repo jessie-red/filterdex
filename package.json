@@ -1,0 +1,40 @@
+{
+  "name": "filterdex",
+  "version": "0.0.1",
+  "description": "A search function for pokemon like scryfall",
+  "keywords": [
+    "pokemon",
+    "search"
+  ],
+  "homepage": "https://github.com/jessie-red/filterdex#readme",
+  "bugs": {
+    "url": "https://github.com/jessie-red/filterdex/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jessie-red/filterdex.git"
+  },
+  "license": "ISC",
+  "author": "jessie-red",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "cli": "node src/cli.ts",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@pkmn/img": "^0.3.3",
+    "solid-js": "^1.9.12"
+  },
+  "devDependencies": {
+    "@pkmn/sim": "^0.10.7",
+    "@types/node": "^25.5.2",
+    "vite": "^8.0.3",
+    "vite-plugin-solid": "^2.11.11",
+    "vitest": "^4.1.2"
+  }
+}

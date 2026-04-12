@@ -1,0 +1,184 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #1a1a2e;
+  color: #e0e0e0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.search-box {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 18px;
+  background: #2a2a3e;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  border-radius: 8px;
+  outline: none;
+}
+
+.advanced-link {
+  color: #6390F0;
+  text-decoration: none;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.advanced-link:hover {
+  text-decoration: underline;
+}
+
+.search-box:focus {
+  border-color: #6390F0;
+}
+
+.search-box::placeholder {
+  color: #888;
+}
+
+.search-desc {
+  font-size: 14px;
+  color: #888;
+  padding: 0 4px 12px;
+}
+
+/* Shared row layout */
+.pokemon-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #2a2a3e;
+}
+
+.pokemon-row:hover {
+  background: #2a2a3e;
+}
+
+.table-header {
+  border-bottom: 1px solid #444;
+  position: sticky;
+  top: 0;
+  background: #1a1a2e;
+  z-index: 1;
+}
+
+.table-header:hover {
+  background: #1a1a2e;
+}
+
+/* Header cell styling */
+.header-cell {
+  cursor: pointer;
+  user-select: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.header-cell:hover {
+  color: #ccc;
+}
+
+.header-cell.active {
+  color: #6390F0;
+}
+
+/* Column widths */
+.dex-num {
+  width: 44px;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: 13px;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  color: #888;
+}
+
+.sprite {
+  width: 40px;
+  height: 40px;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+
+.name {
+  min-width: 160px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.types {
+  display: flex;
+  gap: 4px;
+  min-width: 140px;
+}
+
+.type-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.abilities {
+  width: 200px;
+  flex-shrink: 0;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.hidden-ability {
+  width: 140px;
+  flex-shrink: 0;
+  font-size: 14px;
+  color: #aaa;
+}
+
+/* Stats */
+.stats {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.stat-value {
+  width: 42px;
+  flex-shrink: 0;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'SF Mono', 'Consolas', monospace;
+}
+
+.bst-value {
+  width: 48px;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+}

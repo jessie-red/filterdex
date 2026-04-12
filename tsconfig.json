@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    // General
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "target": "ES2023",
+    // Modules
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    // Type Checking & Safety
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "skipLibCheck": true,
+    "lib": [
+      "es2023",
+      "dom"
+    ],
+    "types": [
+      "node"
+    ],
+  },
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
