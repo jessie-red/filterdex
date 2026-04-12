@@ -1,84 +1,103 @@
-import { createSignal, For } from 'solid-js';
-import { types, tiers, stages, regions, eggGroups, tags, colors } from '../../core/pokemon.ts';
-import type { Type } from '../../core/pokemon.ts';
-import { VGC_FORMAT } from '../../core/dex.ts';
-import { navigate } from '../router.ts';
-import '../AdvancedSearch.css';
+import { createSignal, For } from "solid-js";
+import {
+  types,
+  tiers,
+  stages,
+  regions,
+  eggGroups,
+  tags,
+  colors,
+} from "../../core/pokemon.ts";
+import type { Type } from "../../core/pokemon.ts";
+import { VGC_FORMAT } from "../../core/dex.ts";
+import { navigate } from "../router.ts";
+import "../AdvancedSearch.css";
 
 const TYPE_COLORS: Record<Type, string> = {
-  Normal: '#A8A77A',
-  Fire: '#EE8130',
-  Water: '#6390F0',
-  Electric: '#F7D02C',
-  Grass: '#7AC74C',
-  Ice: '#96D9D6',
-  Fighting: '#C22E28',
-  Poison: '#A33EA1',
-  Ground: '#E2BF65',
-  Flying: '#A98FF3',
-  Psychic: '#F95587',
-  Bug: '#A6B91A',
-  Rock: '#B6A136',
-  Ghost: '#735797',
-  Dragon: '#6F35FC',
-  Dark: '#705746',
-  Steel: '#B7B7CE',
-  Fairy: '#D685AD',
+  Normal: "#A8A77A",
+  Fire: "#EE8130",
+  Water: "#6390F0",
+  Electric: "#F7D02C",
+  Grass: "#7AC74C",
+  Ice: "#96D9D6",
+  Fighting: "#C22E28",
+  Poison: "#A33EA1",
+  Ground: "#E2BF65",
+  Flying: "#A98FF3",
+  Psychic: "#F95587",
+  Bug: "#A6B91A",
+  Rock: "#B6A136",
+  Ghost: "#735797",
+  Dragon: "#6F35FC",
+  Dark: "#705746",
+  Steel: "#B7B7CE",
+  Fairy: "#D685AD",
 };
 
-const STAT_NAMES = ['hp', 'atk', 'def', 'spa', 'spd', 'spe', 'bst'] as const;
+const STAT_NAMES = ["hp", "atk", "def", "spa", "spd", "spe", "bst"] as const;
 const STAT_LABELS: Record<string, string> = {
-  hp: 'HP', atk: 'Attack', def: 'Defense',
-  spa: 'Sp. Atk', spd: 'Sp. Def', spe: 'Speed', bst: 'BST',
+  hp: "HP",
+  atk: "Attack",
+  def: "Defense",
+  spa: "Sp. Atk",
+  spd: "Sp. Def",
+  spe: "Speed",
+  bst: "BST",
 };
-const OPERATORS = ['=', '!=', '<', '>', '<=', '>='] as const;
+const OPERATORS = ["=", "!=", "<", ">", "<=", ">="] as const;
 
 type StatRow = { stat: string; op: string; value: string };
 
 const FORMAT_OPTIONS = [
-  { value: 'VGC', label: VGC_FORMAT },
-  { value: 'Champions', label: 'Champions' },
+  { value: "VGC", label: VGC_FORMAT },
+  { value: "Champions", label: "Champions" },
 ];
-const FORMAT_VALUES = new Set(FORMAT_OPTIONS.map(f => normalize(f.value)));
-const DISPLAY_TIERS = tiers.filter(t => !t.startsWith('('));
+const FORMAT_VALUES = new Set(FORMAT_OPTIONS.map((f) => normalize(f.value)));
+const DISPLAY_TIERS = tiers.filter((t) => !t.startsWith("("));
 
 function normalize(s: string): string {
-  return s.toLowerCase().replace(/[^a-z0-9]/g, '');
+  return s.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
 export default function AdvancedSearchPage() {
-  const [name, setName] = createSignal('');
-  const [selectedTypes, setSelectedTypes] = createSignal<Set<string>>(new Set());
-  const [statRows, setStatRows] = createSignal<StatRow[]>([{ stat: 'hp', op: '>=', value: '' }]);
-  const [genOp, setGenOp] = createSignal('=');
-  const [genValue, setGenValue] = createSignal('');
-  const [weightOp, setWeightOp] = createSignal('>=');
-  const [weightValue, setWeightValue] = createSignal('');
-  const [heightOp, setHeightOp] = createSignal('>=');
-  const [heightValue, setHeightValue] = createSignal('');
-  const [format, setFormat] = createSignal('');
-  const [stage, setStage] = createSignal('');
-  const [region, setRegion] = createSignal('');
-  const [eggGroup, setEggGroup] = createSignal('');
+  const [name, setName] = createSignal("");
+  const [selectedTypes, setSelectedTypes] = createSignal<Set<string>>(
+    new Set(),
+  );
+  const [statRows, setStatRows] = createSignal<StatRow[]>([
+    { stat: "hp", op: ">=", value: "" },
+  ]);
+  const [genOp, setGenOp] = createSignal("=");
+  const [genValue, setGenValue] = createSignal("");
+  const [weightOp, setWeightOp] = createSignal(">=");
+  const [weightValue, setWeightValue] = createSignal("");
+  const [heightOp, setHeightOp] = createSignal(">=");
+  const [heightValue, setHeightValue] = createSignal("");
+  const [format, setFormat] = createSignal("");
+  const [stage, setStage] = createSignal("");
+  const [region, setRegion] = createSignal("");
+  const [eggGroup, setEggGroup] = createSignal("");
   const [selectedTags, setSelectedTags] = createSignal<Set<string>>(new Set());
-  const [color, setColor] = createSignal('');
-  const [ability, setAbility] = createSignal('');
-  const [move, setMove] = createSignal('');
+  const [color, setColor] = createSignal("");
+  const [ability, setAbility] = createSignal("");
+  const [move, setMove] = createSignal("");
 
   function toggleType(t: string) {
     const next = new Set(selectedTypes());
-    if (next.has(t)) next.delete(t); else next.add(t);
+    if (next.has(t)) next.delete(t);
+    else next.add(t);
     setSelectedTypes(next);
   }
 
   function toggleTag(t: string) {
     const next = new Set(selectedTags());
-    if (next.has(t)) next.delete(t); else next.add(t);
+    if (next.has(t)) next.delete(t);
+    else next.add(t);
     setSelectedTags(next);
   }
 
   function addStatRow() {
-    setStatRows([...statRows(), { stat: 'hp', op: '>=', value: '' }]);
+    setStatRows([...statRows(), { stat: "hp", op: ">=", value: "" }]);
   }
 
   function removeStatRow(index: number) {
@@ -86,7 +105,11 @@ export default function AdvancedSearchPage() {
   }
 
   function updateStatRow(index: number, field: keyof StatRow, value: string) {
-    setStatRows(statRows().map((row, i) => i === index ? { ...row, [field]: value } : row));
+    setStatRows(
+      statRows().map((row, i) =>
+        i === index ? { ...row, [field]: value } : row,
+      ),
+    );
   }
 
   function buildQuery(): string {
@@ -99,7 +122,9 @@ export default function AdvancedSearchPage() {
     if (typeEntries.length === 1) {
       parts.push(`type:${typeEntries[0].toLowerCase()}`);
     } else if (typeEntries.length > 1) {
-      parts.push(typeEntries.map(t => `type:${t.toLowerCase()}`).join(' or '));
+      parts.push(
+        typeEntries.map((t) => `type:${t.toLowerCase()}`).join(" or "),
+      );
     }
 
     for (const row of statRows()) {
@@ -129,48 +154,50 @@ export default function AdvancedSearchPage() {
     if (tagEntries.length === 1) {
       parts.push(`is:${normalize(tagEntries[0])}`);
     } else if (tagEntries.length > 1) {
-      parts.push(tagEntries.map(t => `is:${normalize(t)}`).join(' or '));
+      parts.push(tagEntries.map((t) => `is:${normalize(t)}`).join(" or "));
     }
 
     if (color()) parts.push(`color:${normalize(color())}`);
     if (ability().trim()) parts.push(`ability:${normalize(ability().trim())}`);
     if (move().trim()) parts.push(`move:${normalize(move().trim())}`);
 
-    return parts.join(' ');
+    return parts.join(" ");
   }
 
   function handleSubmit(e: Event) {
     e.preventDefault();
     const query = buildQuery();
-    navigate('/', `q=${encodeURIComponent(query)}`);
+    navigate("/", `q=${encodeURIComponent(query)}`);
     window.scrollTo(0, 0);
   }
 
   function handleReset() {
-    setName('');
+    setName("");
     setSelectedTypes(new Set());
-    setStatRows([{ stat: 'hp', op: '>=', value: '' }]);
-    setGenOp('=');
-    setGenValue('');
-    setWeightOp('>=');
-    setWeightValue('');
-    setHeightOp('>=');
-    setHeightValue('');
-    setFormat('');
-    setStage('');
-    setRegion('');
-    setEggGroup('');
+    setStatRows([{ stat: "hp", op: ">=", value: "" }]);
+    setGenOp("=");
+    setGenValue("");
+    setWeightOp(">=");
+    setWeightValue("");
+    setHeightOp(">=");
+    setHeightValue("");
+    setFormat("");
+    setStage("");
+    setRegion("");
+    setEggGroup("");
     setSelectedTags(new Set());
-    setColor('');
-    setAbility('');
-    setMove('');
+    setColor("");
+    setAbility("");
+    setMove("");
   }
 
   return (
     <div class="advanced-search">
       <div class="advanced-header">
         <h1>Advanced Search</h1>
-        <a class="back-link" href="#/">Back to Search</a>
+        <a class="back-link" href="#/">
+          Back to Search
+        </a>
       </div>
 
       <form onSubmit={handleSubmit}>
@@ -193,9 +220,11 @@ export default function AdvancedSearchPage() {
             <For each={[...types]}>
               {(t) => (
                 <label
-                  class={`type-checkbox ${selectedTypes().has(t) ? 'selected' : ''}`}
+                  class={`type-checkbox ${selectedTypes().has(t) ? "selected" : ""}`}
                   style={{
-                    "background-color": selectedTypes().has(t) ? TYPE_COLORS[t] : 'transparent',
+                    "background-color": selectedTypes().has(t)
+                      ? TYPE_COLORS[t]
+                      : "transparent",
                     "border-color": TYPE_COLORS[t],
                   }}
                 >
@@ -220,7 +249,9 @@ export default function AdvancedSearchPage() {
                 <select
                   class="form-select stat-select"
                   value={row.stat}
-                  onChange={(e) => updateStatRow(i(), 'stat', e.currentTarget.value)}
+                  onChange={(e) =>
+                    updateStatRow(i(), "stat", e.currentTarget.value)
+                  }
                 >
                   <For each={[...STAT_NAMES]}>
                     {(s) => <option value={s}>{STAT_LABELS[s]}</option>}
@@ -229,7 +260,9 @@ export default function AdvancedSearchPage() {
                 <select
                   class="form-select op-select"
                   value={row.op}
-                  onChange={(e) => updateStatRow(i(), 'op', e.currentTarget.value)}
+                  onChange={(e) =>
+                    updateStatRow(i(), "op", e.currentTarget.value)
+                  }
                 >
                   <For each={[...OPERATORS]}>
                     {(op) => <option value={op}>{op}</option>}
@@ -241,26 +274,38 @@ export default function AdvancedSearchPage() {
                   inputmode="numeric"
                   placeholder="0"
                   value={row.value}
-                  onInput={(e) => updateStatRow(i(), 'value', e.currentTarget.value)}
+                  onInput={(e) =>
+                    updateStatRow(i(), "value", e.currentTarget.value)
+                  }
                 />
                 <button
                   type="button"
                   class="remove-btn"
                   onClick={() => removeStatRow(i())}
                   title="Remove"
-                >x</button>
+                >
+                  x
+                </button>
               </div>
             )}
           </For>
-          <button type="button" class="add-btn" onClick={addStatRow}>+ Add stat filter</button>
+          <button type="button" class="add-btn" onClick={addStatRow}>
+            + Add stat filter
+          </button>
         </section>
 
         {/* Generation */}
         <section class="form-section">
           <label class="section-label">Generation</label>
           <div class="numeric-row">
-            <select class="form-select op-select" value={genOp()} onChange={(e) => setGenOp(e.currentTarget.value)}>
-              <For each={[...OPERATORS]}>{(op) => <option value={op}>{op}</option>}</For>
+            <select
+              class="form-select op-select"
+              value={genOp()}
+              onChange={(e) => setGenOp(e.currentTarget.value)}
+            >
+              <For each={[...OPERATORS]}>
+                {(op) => <option value={op}>{op}</option>}
+              </For>
             </select>
             <input
               class="form-input stat-input"
@@ -277,8 +322,14 @@ export default function AdvancedSearchPage() {
         <section class="form-section">
           <label class="section-label">Weight (kg)</label>
           <div class="numeric-row">
-            <select class="form-select op-select" value={weightOp()} onChange={(e) => setWeightOp(e.currentTarget.value)}>
-              <For each={[...OPERATORS]}>{(op) => <option value={op}>{op}</option>}</For>
+            <select
+              class="form-select op-select"
+              value={weightOp()}
+              onChange={(e) => setWeightOp(e.currentTarget.value)}
+            >
+              <For each={[...OPERATORS]}>
+                {(op) => <option value={op}>{op}</option>}
+              </For>
             </select>
             <input
               class="form-input stat-input"
@@ -294,8 +345,14 @@ export default function AdvancedSearchPage() {
         <section class="form-section">
           <label class="section-label">Height (m)</label>
           <div class="numeric-row">
-            <select class="form-select op-select" value={heightOp()} onChange={(e) => setHeightOp(e.currentTarget.value)}>
-              <For each={[...OPERATORS]}>{(op) => <option value={op}>{op}</option>}</For>
+            <select
+              class="form-select op-select"
+              value={heightOp()}
+              onChange={(e) => setHeightOp(e.currentTarget.value)}
+            >
+              <For each={[...OPERATORS]}>
+                {(op) => <option value={op}>{op}</option>}
+              </For>
             </select>
             <input
               class="form-input stat-input"
@@ -311,13 +368,21 @@ export default function AdvancedSearchPage() {
         {/* Format (Tier + Legality) */}
         <section class="form-section">
           <label class="section-label">Format</label>
-          <select class="form-select" value={format()} onChange={(e) => setFormat(e.currentTarget.value)}>
+          <select
+            class="form-select"
+            value={format()}
+            onChange={(e) => setFormat(e.currentTarget.value)}
+          >
             <option value="">Any</option>
             <optgroup label="Formats">
-              <For each={FORMAT_OPTIONS}>{(f) => <option value={f.value}>{f.label}</option>}</For>
+              <For each={FORMAT_OPTIONS}>
+                {(f) => <option value={f.value}>{f.label}</option>}
+              </For>
             </optgroup>
             <optgroup label="Tiers">
-              <For each={DISPLAY_TIERS}>{(t) => <option value={t}>{t}</option>}</For>
+              <For each={DISPLAY_TIERS}>
+                {(t) => <option value={t}>{t}</option>}
+              </For>
             </optgroup>
           </select>
         </section>
@@ -325,27 +390,45 @@ export default function AdvancedSearchPage() {
         {/* Stage */}
         <section class="form-section">
           <label class="section-label">Stage</label>
-          <select class="form-select" value={stage()} onChange={(e) => setStage(e.currentTarget.value)}>
+          <select
+            class="form-select"
+            value={stage()}
+            onChange={(e) => setStage(e.currentTarget.value)}
+          >
             <option value="">Any</option>
-            <For each={[...stages]}>{(s) => <option value={s}>{s}</option>}</For>
+            <For each={[...stages]}>
+              {(s) => <option value={s}>{s}</option>}
+            </For>
           </select>
         </section>
 
         {/* Region */}
         <section class="form-section">
           <label class="section-label">Region</label>
-          <select class="form-select" value={region()} onChange={(e) => setRegion(e.currentTarget.value)}>
+          <select
+            class="form-select"
+            value={region()}
+            onChange={(e) => setRegion(e.currentTarget.value)}
+          >
             <option value="">Any</option>
-            <For each={[...regions]}>{(r) => <option value={r}>{r}</option>}</For>
+            <For each={[...regions]}>
+              {(r) => <option value={r}>{r}</option>}
+            </For>
           </select>
         </section>
 
         {/* Egg Group */}
         <section class="form-section">
           <label class="section-label">Egg Group</label>
-          <select class="form-select" value={eggGroup()} onChange={(e) => setEggGroup(e.currentTarget.value)}>
+          <select
+            class="form-select"
+            value={eggGroup()}
+            onChange={(e) => setEggGroup(e.currentTarget.value)}
+          >
             <option value="">Any</option>
-            <For each={[...eggGroups]}>{(eg) => <option value={eg}>{eg}</option>}</For>
+            <For each={[...eggGroups]}>
+              {(eg) => <option value={eg}>{eg}</option>}
+            </For>
           </select>
         </section>
 
@@ -355,7 +438,9 @@ export default function AdvancedSearchPage() {
           <div class="tag-grid">
             <For each={[...tags]}>
               {(t) => (
-                <label class={`tag-checkbox ${selectedTags().has(t) ? 'selected' : ''}`}>
+                <label
+                  class={`tag-checkbox ${selectedTags().has(t) ? "selected" : ""}`}
+                >
                   <input
                     type="checkbox"
                     checked={selectedTags().has(t)}
@@ -371,9 +456,15 @@ export default function AdvancedSearchPage() {
         {/* Color */}
         <section class="form-section">
           <label class="section-label">Color</label>
-          <select class="form-select" value={color()} onChange={(e) => setColor(e.currentTarget.value)}>
+          <select
+            class="form-select"
+            value={color()}
+            onChange={(e) => setColor(e.currentTarget.value)}
+          >
             <option value="">Any</option>
-            <For each={[...colors]}>{(c) => <option value={c}>{c}</option>}</For>
+            <For each={[...colors]}>
+              {(c) => <option value={c}>{c}</option>}
+            </For>
           </select>
         </section>
 
@@ -403,8 +494,12 @@ export default function AdvancedSearchPage() {
 
         {/* Actions */}
         <div class="form-actions">
-          <button type="submit" class="search-btn">Search</button>
-          <button type="button" class="reset-btn" onClick={handleReset}>Clear</button>
+          <button type="submit" class="search-btn">
+            Search
+          </button>
+          <button type="button" class="reset-btn" onClick={handleReset}>
+            Clear
+          </button>
         </div>
       </form>
     </div>

@@ -19,19 +19,9 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "skipLibCheck": true,
-    "lib": [
-      "es2023",
-      "dom"
-    ],
-    "types": [
-      "node"
-    ],
+    "lib": ["es2023", "dom"],
+    "types": ["node"]
   },
-  "include": [
-    "src/**/*",
-    "test/**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**/*", "test/**/*"],
+  "exclude": ["node_modules"]
 }

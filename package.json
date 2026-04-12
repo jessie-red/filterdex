@@ -24,7 +24,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "format": "prettier --write \"**/*.{ts,tsx,scss,json}\""
   },
   "dependencies": {
     "@pkmn/img": "^0.3.3",

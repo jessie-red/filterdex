@@ -1,22 +1,30 @@
-import type { Pokemon } from '../../core/pokemon.ts';
-import TypeBadge from './TypeBadge.tsx';
+import type { Pokemon } from "../../core/pokemon.ts";
+import TypeBadge from "./TypeBadge.tsx";
 
 function spriteUrl(spriteid: string): string {
   return `https://play.pokemonshowdown.com/sprites/gen5/${spriteid}.png`;
 }
 
-const STAT_KEYS = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'] as const;
+const STAT_KEYS = ["hp", "atk", "def", "spa", "spd", "spe"] as const;
 
 export default function PokemonRow(props: { pokemon: Pokemon }) {
   const p = props.pokemon;
-  const abilities = [p.abilities[0], p.abilities[1]].filter(Boolean).join(' / ');
+  const abilities = [p.abilities[0], p.abilities[1]]
+    .filter(Boolean)
+    .join(" / ");
   const hiddenAbility = p.abilities.H;
   const bst = STAT_KEYS.reduce((sum, k) => sum + p.baseStats[k], 0);
 
   return (
     <div class="pokemon-row">
-      <span class="dex-num">{String(p.num).padStart(4, '0')}</span>
-      <img class="sprite" src={spriteUrl(p.spriteid)} alt={p.name} loading="lazy" onError={(e) => e.currentTarget.style.visibility = 'hidden'} />
+      <span class="dex-num">{String(p.num).padStart(4, "0")}</span>
+      <img
+        class="sprite"
+        src={spriteUrl(p.spriteid)}
+        alt={p.name}
+        loading="lazy"
+        onError={(e) => (e.currentTarget.style.visibility = "hidden")}
+      />
       <span class="name">{p.name}</span>
       <span class="types">
         {p.types.map((t) => t && <TypeBadge type={t} />)}
