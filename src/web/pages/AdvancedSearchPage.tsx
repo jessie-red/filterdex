@@ -173,7 +173,7 @@ export default function AdvancedSearchPage() {
 
   function handleReset() {
     setName("");
-    setSelectedTypes(new Set());
+    setSelectedTypes(new Set<string>());
     setStatRows([{ stat: "hp", op: ">=", value: "" }]);
     setGenOp("=");
     setGenValue("");
@@ -185,7 +185,7 @@ export default function AdvancedSearchPage() {
     setStage("");
     setRegion("");
     setEggGroup("");
-    setSelectedTags(new Set());
+    setSelectedTags(new Set<string>());
     setColor("");
     setAbility("");
     setMove("");
