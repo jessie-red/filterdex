@@ -41,12 +41,14 @@ export type SearchResult = { results: Pokemon[]; desc: string };
 
 export function searchPokemon(query: string): SearchResult {
   query = query.toLowerCase();
-  const words: string[] = query.split(/\s+/);
+  const words: string[] = query.split(/\s+/).filter(Boolean);
   const sort = extractSort(words);
   const filterSet: FilterSet = getFilters(words);
   let desc = "";
   if (filterSet.filters.length > 0) {
     desc = `Searching for Pokemon where ${filterSet.filters.map((f) => f.desc || "?").join(" and ")}`;
+  } else if (!query.trim()) {
+    desc = "Searching for all Pokemon";
   }
   if (filterSet.filters.length === 0 && query.trim()) {
     filterSet.filters = [makeSpeciesFuzzyFilter(query)];
