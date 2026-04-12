@@ -1,13 +1,13 @@
 import type { Pokemon } from "../../core/pokemon.ts";
 import TypeBadge from "./TypeBadge.tsx";
-
-function spriteUrl(spriteid: string): string {
-  return `https://play.pokemonshowdown.com/sprites/gen5/${spriteid}.png`;
-}
+import { spriteUrl } from "../sprites.ts";
 
 const STAT_KEYS = ["hp", "atk", "def", "spa", "spd", "spe"] as const;
 
-export default function PokemonRow(props: { pokemon: Pokemon }) {
+export default function PokemonRow(props: {
+  pokemon: Pokemon;
+  onSelect(p: Pokemon): void;
+}) {
   const p = props.pokemon;
   const abilities = [p.abilities[0], p.abilities[1]]
     .filter(Boolean)
@@ -23,6 +23,7 @@ export default function PokemonRow(props: { pokemon: Pokemon }) {
         src={spriteUrl(p.spriteid)}
         alt={p.name}
         loading="lazy"
+        onClick={() => props.onSelect(p)}
         onError={(e) => (e.currentTarget.style.visibility = "hidden")}
       />
       <span class="name">{p.name}</span>

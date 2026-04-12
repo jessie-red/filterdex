@@ -59,7 +59,7 @@ function normalize(s: string): string {
   return s.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
-export default function AdvancedSearchPage() {
+export default function AdvancedSearchPage(props: { mascotName: string }) {
   const [name, setName] = createSignal("");
   const [selectedTypes, setSelectedTypes] = createSignal<Set<string>>(
     new Set(),
@@ -207,7 +207,7 @@ export default function AdvancedSearchPage() {
           <input
             class="form-input"
             type="text"
-            placeholder="e.g. Pikachu"
+            placeholder={`e.g. ${props.mascotName}`}
             value={name()}
             onInput={(e) => setName(e.currentTarget.value)}
           />

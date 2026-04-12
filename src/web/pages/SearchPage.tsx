@@ -3,6 +3,7 @@ import { searchPokemon } from "../../core/search.ts";
 import type { Pokemon } from "../../core/pokemon.ts";
 import PokemonRow from "../components/PokemonRow.tsx";
 import { getQueryParam } from "../router.ts";
+import { spriteUrl } from "../sprites.ts";
 
 type SortKey =
   | "num"
@@ -45,7 +46,11 @@ const STAT_HEADERS: { key: SortKey; label: string }[] = [
   { key: "bst", label: "BST" },
 ];
 
-export default function SearchPage() {
+export default function SearchPage(props: {
+  mascot: Pokemon;
+  onReroll(): void;
+  onSelectMascot(p: Pokemon): void;
+}) {
   const initialQuery = getQueryParam("q") || "";
   const [query, setQuery] = createSignal(initialQuery);
   const [sortKey, setSortKey] = createSignal<SortKey | null>(null);
@@ -95,6 +100,12 @@ export default function SearchPage() {
   return (
     <>
       <div class="search-row">
+        <img
+          class="mascot-sprite"
+          src={spriteUrl(props.mascot.spriteid)}
+          alt={props.mascot.name}
+          onClick={props.onReroll}
+        />
         <input
           class="search-box"
           type="text"
@@ -140,7 +151,9 @@ export default function SearchPage() {
       </div>
       <div class="results">
         <For each={sorted()}>
-          {(pokemon) => <PokemonRow pokemon={pokemon} />}
+          {(pokemon) => (
+            <PokemonRow pokemon={pokemon} onSelect={props.onSelectMascot} />
+          )}
         </For>
       </div>
     </>
