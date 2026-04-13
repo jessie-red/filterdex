@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
-import palettesPlugin from "./scripts/vite-plugin-palettes.ts";
+import palettesPlugin from "./src/build/palettes.ts";
 
 export default defineConfig({
   plugins: [solid(), palettesPlugin()],
