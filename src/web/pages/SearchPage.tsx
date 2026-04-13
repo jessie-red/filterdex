@@ -130,7 +130,7 @@ export default function SearchPage(props: {
         </span>
         <div class="sprite" />
         <span
-          class={`header-cell name ${sortKey() === "name" ? "active" : ""}`}
+          class={`header-cell name-col ${sortKey() === "name" ? "active" : ""}`}
           onClick={() => handleHeaderClick("name")}
         >
           Pokemon {arrow("name")}

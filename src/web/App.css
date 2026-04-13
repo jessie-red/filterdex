@@ -1,7 +1,7 @@
 :root {
   --bg: #1a1a2e;
   --bg-raised: #2a2a3e;
-  --accent: #6390F0;
+  --accent: #6390f0;
   --accent-hover: #5280e0;
   --text: #e0e0e0;
   --text-muted: #888;
@@ -18,7 +18,8 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .app {
@@ -119,7 +120,7 @@ body {
 }
 
 .header-cell.active {
-  color: var(--accent);
+  color: var(--text);
 }
 
 /* Column widths */
@@ -128,7 +129,7 @@ body {
   flex-shrink: 0;
   text-align: right;
   font-size: 13px;
-  font-family: 'SF Mono', 'Consolas', monospace;
+  font-family: "SF Mono", "Consolas", monospace;
   color: var(--text-muted);
 }
 
@@ -139,8 +140,12 @@ body {
   flex-shrink: 0;
 }
 
-.name {
+.name-col {
   min-width: 160px;
+  font-size: 18px;
+}
+
+.name {
   font-size: 18px;
   font-weight: 600;
   color: var(--text);
@@ -173,7 +178,7 @@ body {
   width: 140px;
   flex-shrink: 0;
   font-size: 14px;
-  color: var(--text-muted);
+  color: var(--text);
 }
 
 /* Stats */
@@ -190,7 +195,7 @@ body {
   text-align: center;
   font-size: 14px;
   font-weight: 600;
-  font-family: 'SF Mono', 'Consolas', monospace;
+  font-family: "SF Mono", "Consolas", monospace;
 }
 
 .bst-value {

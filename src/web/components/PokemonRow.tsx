@@ -26,7 +26,7 @@ export default function PokemonRow(props: {
         onClick={() => props.onSelect(p)}
         onError={(e) => (e.currentTarget.style.visibility = "hidden")}
       />
-      <span class="name">{p.name}</span>
+      <span class="name-col name">{p.name}</span>
       <span class="types">
         {p.types.map((t) => t && <TypeBadge type={t} />)}
       </span>
