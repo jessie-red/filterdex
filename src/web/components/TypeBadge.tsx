@@ -21,11 +21,19 @@ const TYPE_COLORS: Record<Type, string> = {
   Fairy: "#D685AD",
 };
 
-export default function TypeBadge(props: { type: Type }) {
+export default function TypeBadge(props: {
+  type: Type;
+  onSearch?: (query: string) => void;
+}) {
   return (
     <span
-      class="type-badge"
+      class={`type-badge${props.onSearch ? " clickable" : ""}`}
       style={{ "background-color": TYPE_COLORS[props.type] }}
+      onClick={(e) => {
+        if (!props.onSearch) return;
+        e.stopPropagation();
+        props.onSearch(`type:${props.type.toLowerCase()}`);
+      }}
     >
       {props.type}
     </span>

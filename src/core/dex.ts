@@ -22,21 +22,21 @@ const CHAMPIONS_URL =
 // Remove once @pkmn/sim publishes a version newer than 0.10.7.
 // prettier-ignore
 const MEGA_OVERRIDES: Record<string, { abilities: { 0: string }; baseStats?: Pokemon['baseStats'] }> = {
-    clefablemega:       { abilities: { 0: "Magic Bounce" } },
-    victreebelmega:     { abilities: { 0: "Innards Out" } },
-    starmiemega:        { abilities: { 0: "Huge Power" }, baseStats: { hp: 60, atk: 100, def: 105, spa: 130, spd: 105, spe: 120 } },
-    skarmorymega:       { abilities: { 0: "Stalwart" } },
-    excadrillmega:      { abilities: { 0: "Piercing Drill" } },
-    chandeluremega:     { abilities: { 0: "Infiltrator" } },
-    golurkmega:         { abilities: { 0: "Unseen Fist" } },
-    floettemega:        { abilities: { 0: "Fairy Aura" } },
-    meowsticmmega:      { abilities: { 0: "Trace" } },
-    meowsticfmega:      { abilities: { 0: "Trace" } },
-    hawluchamega:       { abilities: { 0: "No Guard" } },
-    crabominablemega:   { abilities: { 0: "Iron Fist" } },
-    drampamega:         { abilities: { 0: "Berserk" } },
-    scovillainmega:     { abilities: { 0: "Spicy Spray" } },
-    glimmoramega:       { abilities: { 0: "Adaptability" } },
+  clefablemega: { abilities: { 0: "Magic Bounce" } },
+  victreebelmega: { abilities: { 0: "Innards Out" } },
+  starmiemega: { abilities: { 0: "Huge Power" }, baseStats: { hp: 60, atk: 100, def: 105, spa: 130, spd: 105, spe: 120 } },
+  skarmorymega: { abilities: { 0: "Stalwart" } },
+  excadrillmega: { abilities: { 0: "Piercing Drill" } },
+  chandeluremega: { abilities: { 0: "Infiltrator" } },
+  golurkmega: { abilities: { 0: "Unseen Fist" } },
+  floettemega: { abilities: { 0: "Fairy Aura" } },
+  meowsticmmega: { abilities: { 0: "Trace" } },
+  meowsticfmega: { abilities: { 0: "Trace" } },
+  hawluchamega: { abilities: { 0: "No Guard" } },
+  crabominablemega: { abilities: { 0: "Iron Fist" } },
+  drampamega: { abilities: { 0: "Berserk" } },
+  scovillainmega: { abilities: { 0: "Spicy Spray" } },
+  glimmoramega: { abilities: { 0: "Adaptability" } },
 };
 
 type VGCRules = {
@@ -134,7 +134,8 @@ async function buildDex(): Promise<DexData> {
   const moveSet = new Set<string>();
   for (const species of Dex.species.all()) {
     if (species.num <= 0) continue; // skip non-pokemon species
-    if (species.forme?.includes("Totem")) continue;
+    if (species.forme?.includes("Totem") || species.forme === "Busted")
+      continue;
     speciesSet.add(species.name);
     if (species.forme) formeSet.add(species.forme);
     const megaOverride = MEGA_OVERRIDES[species.id];
@@ -198,7 +199,7 @@ function getMoves(species: Species, champions: ChampionsData | null): string[] {
       .filter((m) => m.exists)
       .map((m) => m.name);
   }
-  return [...Dex.species.getMovePool(species.id)].map(
+  return [...Dex.species.getMovePool(species.id, true)].map(
     (m) => Dex.moves.get(m).name,
   );
 }

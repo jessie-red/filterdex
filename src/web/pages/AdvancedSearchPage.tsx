@@ -10,7 +10,7 @@ import {
 } from "../../core/pokemon.ts";
 import type { Type } from "../../core/pokemon.ts";
 import { VGC_FORMAT } from "../../core/dex.ts";
-import { navigate } from "../router.ts";
+
 import "../AdvancedSearch.css";
 
 const TYPE_COLORS: Record<Type, string> = {
@@ -59,7 +59,10 @@ function normalize(s: string): string {
   return s.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
-export default function AdvancedSearchPage(props: { mascotName: string }) {
+export default function AdvancedSearchPage(props: {
+  mascotName: string;
+  onSearch(query: string): void;
+}) {
   const [name, setName] = createSignal("");
   const [selectedTypes, setSelectedTypes] = createSignal<Set<string>>(
     new Set(),
@@ -167,7 +170,7 @@ export default function AdvancedSearchPage(props: { mascotName: string }) {
   function handleSubmit(e: Event) {
     e.preventDefault();
     const query = buildQuery();
-    navigate("/", `q=${encodeURIComponent(query)}`);
+    props.onSearch(query);
     window.scrollTo(0, 0);
   }
 

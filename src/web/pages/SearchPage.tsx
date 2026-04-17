@@ -1,4 +1,11 @@
-import { createSignal, createMemo, For, Show, onMount } from "solid-js";
+import {
+  createSignal,
+  createMemo,
+  createEffect,
+  For,
+  Show,
+  onMount,
+} from "solid-js";
 import { searchPokemon } from "../../core/search.ts";
 import type { Pokemon } from "../../core/pokemon.ts";
 import PokemonRow from "../components/PokemonRow.tsx";
@@ -50,15 +57,21 @@ export default function SearchPage(props: {
   mascot: Pokemon;
   onReroll(): void;
   onSelectMascot(p: Pokemon): void;
+  injectedQuery: string;
 }) {
   const initialQuery = getQueryParam("q") || "";
   const [query, setQuery] = createSignal(initialQuery);
   const [sortKey, setSortKey] = createSignal<SortKey | null>(null);
   const [sortDesc, setSortDesc] = createSignal(false);
+  const [expandedId, setExpandedId] = createSignal<string | null>(null);
 
   onMount(() => {
     const q = getQueryParam("q");
     if (q) setQuery(q);
+  });
+
+  createEffect(() => {
+    if (props.injectedQuery) setQuery(props.injectedQuery);
   });
 
   function handleHeaderClick(key: SortKey) {
@@ -152,7 +165,17 @@ export default function SearchPage(props: {
       <div class="results">
         <For each={sorted()}>
           {(pokemon) => (
-            <PokemonRow pokemon={pokemon} onSelect={props.onSelectMascot} />
+            <PokemonRow
+              pokemon={pokemon}
+              expanded={expandedId() === pokemon.id}
+              onSelect={props.onSelectMascot}
+              onSearch={setQuery}
+              onToggle={() =>
+                setExpandedId((prev) =>
+                  prev === pokemon.id ? null : pokemon.id,
+                )
+              }
+            />
           )}
         </For>
       </div>
