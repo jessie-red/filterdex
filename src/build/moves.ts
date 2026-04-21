@@ -10,6 +10,7 @@ export interface MoveInfo {
   basePower: number;
   accuracy: number | true;
   pp: number;
+  shortDesc: string;
 }
 
 export default function movesPlugin(): Plugin {
@@ -28,6 +29,7 @@ export default function movesPlugin(): Plugin {
           basePower: move.basePower,
           accuracy: move.accuracy,
           pp: move.pp,
+          shortDesc: move.shortDesc || move.desc || "",
         };
       }
       json = JSON.stringify(moves);

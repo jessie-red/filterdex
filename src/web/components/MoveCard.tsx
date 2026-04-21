@@ -110,6 +110,7 @@ export default function MoveCard(props: {
         >
           PP {arrow("pp")}
         </span>
+        <span class="header-cell move-desc">Description</span>
       </div>
       <For each={sorted()}>
         {(name) => (

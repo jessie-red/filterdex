@@ -45,14 +45,13 @@ const FILTER_FUNCTIONS: getFilterFunction[] = [
   getTypeFilter,
   getAbilityFilter,
   getMoveFilter,
-  getTierFiler,
   getRegionFilter,
   getFormeFilter,
   getStageFilter,
   getEggGroupFilter,
   getTagFilter,
   getColorFilter,
-  getLegalFilter,
+  getTierLegalFilter,
   getHpFilter,
   getAtkFilter,
   getDefFilter,
@@ -83,10 +82,12 @@ export function parseFilters(words: string[]): Filter[] {
     words.splice(0, 1);
     return [OR_FILTER, ...parseFilters(words)];
   }
+  const negate = words[0].startsWith("!") && words[0].length > 1;
+  const search = negate ? [words[0].slice(1), ...words.slice(1)] : words;
   let bestMatch: FilterMatch | null = null;
   let bestSublistLen = 0;
-  for (let i = 0; i < words.length; i++) {
-    const sublist: string[] = words.slice(0, words.length - i);
+  for (let i = 0; i < search.length; i++) {
+    const sublist: string[] = search.slice(0, search.length - i);
     const match = tryGetFilter(sublist);
     if (match && (!bestMatch || match.match > bestMatch.match)) {
       bestMatch = match;
@@ -94,14 +95,25 @@ export function parseFilters(words: string[]): Filter[] {
     }
     if (bestMatch?.match === 100) break;
   }
-  if (words.length == 1 && !bestMatch) {
-    return [makeSpeciesFuzzyFilter(words[0])];
+  if (search.length == 1 && !bestMatch) {
+    const term = search[0];
+    words.splice(0, 1);
+    const fuzzy = makeSpeciesFuzzyFilter(term);
+    return [negate ? negateFilter(fuzzy) : fuzzy];
   }
   if (bestMatch) {
     words.splice(0, bestSublistLen);
-    return [bestMatch.filter, ...parseFilters(words)];
+    const matched = negate ? negateFilter(bestMatch.filter) : bestMatch.filter;
+    return [matched, ...parseFilters(words)];
   }
   return [];
+}
+
+function negateFilter(f: Filter): Filter {
+  return {
+    filter: (p) => !f.filter(p),
+    desc: `NOT (${f.desc ?? "?"})`,
+  };
 }
 
 export function combineFilters(filters: Filter[]): FilterSet {
@@ -194,7 +206,7 @@ function getSpeciesFilter(word: string): FilterMatch | null {
         filter: (p) => p.id.startsWith(match.word),
         desc: `the species is ${match.display}`,
       },
-      match: 100,
+      match: match.match,
     };
   }
 
@@ -215,7 +227,7 @@ function getTypeFilter(word: string): FilterMatch | null {
       filter: (p) => p.types.includes(match.display as Pokemon["types"][0]),
       desc: `the type is ${match.display}`,
     },
-    match: 100,
+    match: match.match,
   };
 }
 
@@ -231,7 +243,7 @@ function getAbilityFilter(word: string): FilterMatch | null {
         ),
       desc: `the ability is ${match.display}`,
     },
-    match: 100,
+    match: match.match,
   };
 }
 
@@ -247,21 +259,7 @@ function getMoveFilter(word: string): FilterMatch | null {
         ),
       desc: `the move ${match.display} is learned`,
     },
-    match: 100,
-  };
-}
-
-function getTierFiler(word: string): FilterMatch | null {
-  const { value, prefixed } = stripPrefix(word, ["tier"]);
-  const match: WordMatch | null = matchWord(value, [...tiers]);
-  if (!match || (!prefixed && match.match !== 100)) return null;
-  return {
-    filter: {
-      filter: (p) =>
-        p.tier.toLowerCase().replace(/[^a-z0-9]/g, "") === match.word,
-      desc: `the tier is ${match.display}`,
-    },
-    match: 100,
+    match: match.match,
   };
 }
 
@@ -276,7 +274,7 @@ function getFormeFilter(word: string): FilterMatch | null {
         p.forme.toLowerCase().replace(/[^a-z0-9]/g, "") === match.word,
       desc: `the forme is ${match.display}`,
     },
-    match: 100,
+    match: match.match,
   };
 }
 
@@ -290,7 +288,7 @@ function getStageFilter(word: string): FilterMatch | null {
         p.stage.toLowerCase().replace(/[^a-z0-9]/g, "") === match.word,
       desc: `the stage is ${match.display}`,
     },
-    match: 100,
+    match: match.match,
   };
 }
 
@@ -306,7 +304,7 @@ function getEggGroupFilter(word: string): FilterMatch | null {
         ),
       desc: `the egg group is ${match.display}`,
     },
-    match: 100,
+    match: match.match,
   };
 }
 
@@ -320,7 +318,7 @@ function getRegionFilter(word: string): FilterMatch | null {
         p.region.toLowerCase().replace(/[^a-z0-9]/g, "") === match.word,
       desc: `the region is ${match.display}`,
     },
-    match: 100,
+    match: match.match,
   };
 }
 
@@ -336,7 +334,7 @@ function getTagFilter(word: string): FilterMatch | null {
         ),
       desc: `the tag is ${match.display}`,
     },
-    match: 100,
+    match: match.match,
   };
 }
 
@@ -350,22 +348,36 @@ function getColorFilter(word: string): FilterMatch | null {
         p.color.toLowerCase().replace(/[^a-z0-9]/g, "") === match.word,
       desc: `the color is ${match.display}`,
     },
-    match: 100,
+    match: match.match,
   };
 }
 
-function getLegalFilter(word: string): FilterMatch | null {
-  const { value, prefixed } = stripPrefix(word, ["legal", "format", "f"]);
-  const match: WordMatch | null = matchWord(value, [...formats]);
+function getTierLegalFilter(word: string): FilterMatch | null {
+  const { value, prefixed } = stripPrefix(word, [
+    "tier",
+    "legal",
+    "format",
+    "f",
+  ]);
+  const match: WordMatch | null = matchWord(value, [...tiers, ...formats]);
   if (!match || (!prefixed && match.match !== 100)) return null;
   const getter = formatGetter[match.word];
-  if (!getter) return null;
+  if (getter) {
+    return {
+      filter: {
+        filter: (p) => getter(p),
+        desc: `the legality includes ${match.display}`,
+      },
+      match: match.match,
+    };
+  }
   return {
     filter: {
-      filter: (p) => getter(p),
-      desc: `the legality includes ${match.display}`,
+      filter: (p) =>
+        p.tier.toLowerCase().replace(/[^a-z0-9]/g, "") === match.word,
+      desc: `the tier is ${match.display}`,
     },
-    match: 100,
+    match: match.match,
   };
 }
 

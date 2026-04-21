@@ -19,3 +19,4 @@ run_check() {
 
 run_check "Format OK." pnpm format --log-level error
 run_check "Typecheck OK." tsc
+run_check "Tests OK." npm run test

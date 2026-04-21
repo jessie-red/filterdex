@@ -61,6 +61,13 @@ body {
   outline: none;
 }
 
+.search-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
 .advanced-link {
   color: var(--accent);
   text-decoration: none;
@@ -70,6 +77,45 @@ body {
 
 .advanced-link:hover {
   text-decoration: underline;
+}
+
+.syntax-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.syntax-toggle:hover {
+  text-decoration: underline;
+}
+
+.syntax-guide {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.syntax-guide p {
+  margin: 4px 0;
+}
+
+.syntax-guide code {
+  background: var(--bg);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: "SF Mono", "Consolas", monospace;
+  font-size: 12px;
+  color: var(--accent);
 }
 
 .search-box:focus {
@@ -150,8 +196,12 @@ body {
 }
 
 .name-col {
-  min-width: 160px;
+  flex: 0 1 200px;
+  min-width: 110px;
   font-size: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .name {
@@ -185,17 +235,23 @@ body {
 }
 
 .abilities {
-  width: 200px;
-  flex-shrink: 0;
+  flex: 0 1 200px;
+  min-width: 70px;
   font-size: 14px;
   color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .hidden-ability {
-  width: 140px;
-  flex-shrink: 0;
+  flex: 0 1 140px;
+  min-width: 70px;
   font-size: 14px;
   color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Stats */
@@ -305,6 +361,20 @@ body {
   font-family: "SF Mono", "Consolas", monospace;
 }
 
+.move-desc {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.move-row:not(.move-card-header) .move-desc {
+  text-align: left;
+}
+
 /* Byline header */
 .site-header {
   display: flex;
@@ -324,4 +394,23 @@ body {
   font-size: 14px;
   color: var(--text-muted);
   font-style: italic;
+}
+
+@media (max-width: 900px) {
+  .app {
+    padding: 16px 8px;
+  }
+  .pokemon-row {
+    gap: 8px;
+    padding: 8px;
+  }
+  .types {
+    flex-direction: column;
+    min-width: 72px;
+    align-items: flex-start;
+  }
+  .type-badge {
+    width: 100%;
+    text-align: center;
+  }
 }

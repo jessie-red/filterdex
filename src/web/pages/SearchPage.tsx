@@ -64,6 +64,7 @@ export default function SearchPage(props: {
   const [sortKey, setSortKey] = createSignal<SortKey | null>(null);
   const [sortDesc, setSortDesc] = createSignal(false);
   const [expandedId, setExpandedId] = createSignal<string | null>(null);
+  const [syntaxOpen, setSyntaxOpen] = createSignal(false);
 
   onMount(() => {
     const q = getQueryParam("q");
@@ -127,10 +128,57 @@ export default function SearchPage(props: {
           onInput={(e) => setQuery(e.currentTarget.value)}
           autofocus
         />
-        <a class="advanced-link" href="#/advanced">
-          Advanced Search
-        </a>
+        <div class="search-links">
+          <a class="advanced-link" href="#/advanced">
+            Advanced Search
+          </a>
+          <button
+            type="button"
+            class="syntax-toggle"
+            onClick={() => setSyntaxOpen(!syntaxOpen())}
+          >
+            Syntax Guide
+          </button>
+        </div>
       </div>
+      <Show when={syntaxOpen()}>
+        <div class="syntax-guide">
+          <p>
+            Welcome to <strong> FilterDex! </strong>
+          </p>
+          <p>
+            Typing the name of a move, ability, type, or other field into the
+            search bar will search for all pokemon with that quality. For
+            example, the search "fire intimidate parting shot champions" yields
+            exactly one pokemon.
+          </p>
+          <p>The available text fields are:</p>
+          <p>
+            <code>type:</code>, <code>ability:</code>, <code>move:</code>,{" "}
+            <code>legal:</code>, <code>forme:</code>, <code>stage:</code>,{" "}
+            <code>region:</code>, <code>egg:</code>, <code>color:</code>,{" "}
+            <code>tag:</code>.
+          </p>
+          <p>
+            Search numeric fields with <code>=</code> <code>!=</code>{" "}
+            <code>&lt;</code> <code>&gt;</code> <code>&lt;=</code>, and{" "}
+            <code>&gt;=</code>
+          </p>
+          <p>The available numeric fields are:</p>
+          <p>
+            <code>hp</code>, <code>atk</code>, <code>def</code>,{" "}
+            <code>spa</code>, <code>spd</code>, <code>spe</code>,{" "}
+            <code>bst</code>, <code>gen</code>, <code>weight</code>,{" "}
+            <code>height</code>, <code>num</code>.
+          </p>
+          <p>
+            Automatically filters combine with "and" by default. Use{" "}
+            <code>or</code> between terms, or prefix with <code>!</code> to
+            negate.
+          </p>
+          <p>Sort by clicking on the column headings.</p>
+        </div>
+      </Show>
       <Show when={search().desc}>
         <div class="search-desc">{search().desc}</div>
       </Show>

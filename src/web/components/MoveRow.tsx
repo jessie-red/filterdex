@@ -39,6 +39,7 @@ export default function MoveRow(props: {
         {m.accuracy === true ? "\u2014" : `${m.accuracy}%`}
       </span>
       <span class="move-stat">{m.pp}</span>
+      <span class="move-desc">{m.shortDesc}</span>
     </div>
   );
 }
